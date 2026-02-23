@@ -6,23 +6,47 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <title>Job Tracker</title>
   </head>
-  <body class="bg-[#F8FAFC]">
+  <body class="bg-[#F8FAFC] mt-10">
     <header class="w-[80%] mx-auto">
       <h1 class="text-4xl font-bold text-[#002C5C]">Job Application Tracker</h1>
       <div class="grid grid-cols-3 gap-20 mt-10">
         <div class="bg-white p-4 rounded-lg shadow-md">
           <p>Total</p>
-          <p id="total">0</p>
+          <p class="text-3xl text-[#002C5C] font-bold" id="total">0</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-md">
           <p>Interview</p>
-          <p id="interviewCount">0</p>
+          <p class="text-3xl text-[#10B981] font-bold" id="interviewCount">0</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-md">
           <p>Rejected</p>
-          <p id="rejectedCount">0</p>
+          <p class="text-3xl text-[#EF4444] font-bold" id="rejectedCount">0</p>
         </div>
       </div>
     </header>
+    <hr class="my-10 text-[#E6E7E9] w-[80%] mx-auto" />
+    <!-- Main section starts here -->
+    <main class="w-[80%] mx-auto">
+      <div class="main-head">
+        <h1 class="text-2xl font-bold text-[#002C5C]">Available Jobs</h1>
+      </div>
+
+      <div class="mt-[30px] flex gap-3">
+        <button
+          class="bg-blue-700 text-white px-12 py-3 rounded-md"
+          id="all-btn"
+        >
+          All
+        </button>
+        <button class="bg-white px-12 py-3 rounded-md" id="interview-btn">
+          Interview
+        </button>
+        <button class="bg-white px-12 py-3 rounded-md" id="rejected-btn">
+          Rejected
+        </button>
+      </div>
+
+      <!-- card section  -->
+    </main>
   </body>
 </html>
