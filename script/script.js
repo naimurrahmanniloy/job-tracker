@@ -1,5 +1,6 @@
 let interviewList = [];
 let rejectedList = [];
+let deletedArray = [];
 let currentStatus = "all";
 
 //Got all the count elements
@@ -10,8 +11,9 @@ let rejectedCount = document.getElementById("rejectedCount");
 let notAppliedCount = document.getElementById("notAppliedCount");
 let filteredSection = document.getElementById("filtered-section");
 let emptyState = document.getElementById("empty-state");
-
 let availableJobs = document.getElementById("job-count");
+let trashBtn = document.getElementById("trash-btn");
+console.log(trashBtn);
 
 //Got all the buttons which will be used to filter the cards
 const allBtn = document.getElementById("all-btn");
@@ -33,12 +35,7 @@ function calculateCount() {
 }
 calculateCount();
 
-let trashedBBtn = document
-  .getElementById("trash-btn")
-  .addEventListener("click", function (event) {
-    if()
-  });
-
+//Made for the filter buttons
 function toggleStyle(id) {
   currentStatus = id;
   allBtn.classList.add("bg-white", "text-black");
@@ -143,6 +140,29 @@ mainContainer.addEventListener("click", function (event) {
     parentNodes.remove();
     calculateCount();
   }
+
+  trashBtn.addEventListener("click", function (event) {
+    const parentNode = event.target.parentNode;
+    const parentNodes = event.target.closest(".flex");
+    const companyName = parentNode.querySelector(".company-name").innerText;
+    const jobTitle = parentNode.querySelector(".job-title").innerText;
+    const jobLocation = parentNode.querySelector(".job-location").innerText;
+    const jobDescription =
+      parentNode.querySelector(".job-description").innerText;
+    const status = parentNode.querySelector(".status-btn").innerText;
+    const jobData = {
+      companyName,
+      jobTitle,
+      jobLocation,
+      jobDescription,
+      status,
+    };
+    deletedArray.push(jobData);
+    interviewList = interviewList.filter((card) => card !== jobData);
+    rejectedList = rejectedList.filter((card) => card !== jobData);
+    parentNodes.remove();
+    calculateCount();
+  });
 });
 
 function renderCards() {
@@ -164,7 +184,7 @@ function renderCards() {
           <h1 class="company-name text-2xl text-[#002C5C]">${interview.companyName}</h1>
           <p class="job-title text-[#64748B] mb-5 text-lg">${interview.jobTitle}</p>
           <p class="job-location text-[#64748B] mb-5">${interview.jobLocation}</p>
-          <p class="bg-[#EEF4FF] w-[16%] p-3 uppercase text-[#002C5C] font-semibold mb-2 status-btn">${interview.status}</p>
+          <p class="bg-green-600 w-[16%] text-white p-3 uppercase font-semibold mb-2 status-btn">${interview.status}</p>
           <p class="job-description mb-5 text-[#323B49]">${interview.jobDescription}</p>
             <button
               id="interview-btn"
@@ -206,7 +226,7 @@ function renderRejectedCards() {
           <h1 class="company-name text-2xl text-[#002C5C]">${rejected.companyName}</h1>
           <p class="job-title text-[#64748B] mb-5 text-lg">${rejected.jobTitle}</p>
           <p class="job-location text-[#64748B] mb-5">${rejected.jobLocation}</p>
-          <p class="bg-[#EEF4FF] w-[16%] p-3 uppercase text-[#002C5C] font-semibold mb-2 status-btn">${rejected.status}</p>
+          <p class="bg-red-600 w-[16%] text-white p-3 uppercase font-semibold mb-2 status-btn">${rejected.status}</p>
           <p class="job-description mb-5 text-[#323B49]">${rejected.jobDescription}</p>
             <button
               id="interview-btn"
