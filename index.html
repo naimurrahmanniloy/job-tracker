@@ -50,15 +50,24 @@
 
       <div class="mt-[30px] flex gap-3">
         <button
-          class="bg-blue-700 text-white px-12 py-3 rounded-md"
+          onclick="toggleStyle('all-btn')"
+          class="bg-blue-700 text-white px-12 py-3 rounded-md cursor-pointer"
           id="all-btn"
         >
           All
         </button>
-        <button class="bg-white px-12 py-3 rounded-md" id="interview-btn">
+        <button
+          onclick="toggleStyle('interview-btn')"
+          class="bg-white px-12 py-3 rounded-md cursor-pointer"
+          id="interview-btn"
+        >
           Interview
         </button>
-        <button class="bg-white px-12 py-3 rounded-md" id="rejected-btn">
+        <button
+          onclick="toggleStyle('rejected-btn')"
+          class="bg-white px-12 py-3 rounded-md cursor-pointer"
+          id="rejected-btn"
+        >
           Rejected
         </button>
       </div>
@@ -85,7 +94,10 @@
               Build cross-platform mobile applications using React Native. Work
               on products used by millions of users worldwide.
             </p>
-            <button class="btn btn-outline btn-success text-lg mr-2">
+            <button
+              id="interview-btn"
+              class="btn btn-outline btn-success text-lg mr-2"
+            >
               Interview
             </button>
             <button class="btn btn-outline btn-error text-lg">Rejected</button>
