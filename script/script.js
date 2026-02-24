@@ -10,6 +10,7 @@ let rejectedCount = document.getElementById("rejectedCount");
 let notAppliedCount = document.getElementById("notAppliedCount");
 let filteredSection = document.getElementById("filtered-section");
 let emptyState = document.getElementById("empty-state");
+
 let availableJobs = document.getElementById("job-count");
 
 //Got all the buttons which will be used to filter the cards
@@ -31,6 +32,12 @@ function calculateCount() {
   availableJobs.innerText = allCards.children.length;
 }
 calculateCount();
+
+let trashedBBtn = document
+  .getElementById("trash-btn")
+  .addEventListener("click", function (event) {
+    if()
+  });
 
 function toggleStyle(id) {
   currentStatus = id;
