@@ -48,6 +48,7 @@ function toggleStyle(id) {
   if (id == "interview-btn") {
     allCards.classList.add("hidden");
     filteredSection.classList.remove("hidden");
+    availableJobs.innerText = interviewList.length;
     renderCards();
   } else if (id == "all-btn") {
     allCards.classList.remove("hidden");
@@ -55,6 +56,7 @@ function toggleStyle(id) {
   } else if (id == "rejected-btn") {
     allCards.classList.add("hidden");
     filteredSection.classList.remove("hidden");
+    availableJobs.innerText = rejectedList.length;
     renderRejectedCards();
   }
 }
@@ -86,7 +88,7 @@ mainContainer.addEventListener("click", function (event) {
         !(card.companyName === companyName && card.jobTitle === jobTitle),
     );
 
-    // REMOVE FROM ALL CARDS SECTION - ADD THIS PART
+    // REMOVE FROM ALL CARDS SECTION
 
     const allCardsList = allCards.querySelectorAll(".flex.mt-5");
     for (let card of allCardsList) {
