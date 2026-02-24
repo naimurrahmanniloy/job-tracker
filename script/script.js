@@ -58,10 +58,11 @@ function toggleStyle(id) {
 }
 
 mainContainer.addEventListener("click", function (event) {
-  console.log(event.target.classList.contains("interview-btn"));
   if (event.target.classList.contains("interview-btn")) {
     const parentNode = event.target.parentNode;
     const parentNodes = event.target.closest(".flex");
+    //backed all the jobs
+
     const companyName = parentNode.querySelector(".company-name").innerText;
     const jobTitle = parentNode.querySelector(".job-title").innerText;
     const jobLocation = parentNode.querySelector(".job-location").innerText;
@@ -131,6 +132,55 @@ mainContainer.addEventListener("click", function (event) {
     }
     parentNodes.remove();
     calculateCount();
+  } else if (event.target.closest(".fa-trash-can")) {
+    const parentNode = event.target.closest(".flex");
+    console.log(parentNode);
+    const companyName = parentNode.querySelector(".company-name").innerText;
+    const jobTitle = parentNode.querySelector(".job-title").innerText;
+    const jobLocation = parentNode.querySelector(".job-location").innerText;
+    const jobDescription =
+      parentNode.querySelector(".job-description").innerText;
+
+    // Remove from Interview
+    interviewList = interviewList.filter(
+      (card) =>
+        !(card.companyName === companyName && card.jobTitle === jobTitle),
+    );
+
+    // Remove from Rejected
+    rejectedList = rejectedList.filter(
+      (card) =>
+        !(card.companyName === companyName && card.jobTitle === jobTitle),
+    );
+
+    // Create NOT APPLIED card again in All section
+    const div = document.createElement("div");
+    div.className =
+      "flex justify-between p-15 bg-white rounded-lg shadow-md mb-8";
+
+    div.innerHTML = `
+        <div>
+          <h1 class="company-name text-2xl text-[#002C5C]">${companyName}</h1>
+          <p class="job-title text-[#64748B] mb-5 text-lg">${jobTitle}</p>
+          <p class="job-location text-[#64748B] mb-5">${jobLocation}</p>
+          <p class="bg-[#EEF4FF] w-[16%] p-3 uppercase text-[#002C5C] font-semibold mb-2 status-btn">NOT APPLIED</p>
+          <p class="job-description mb-5 text-[#323B49]">${jobDescription}</p>
+            <button class="btn btn-outline btn-success text-lg mr-2 interview-btn">
+              Interview
+            </button>
+            <button class="btn btn-outline btn-error text-lg rejected-btn">
+              Rejected
+            </button>
+        </div>
+        <div class="border h-8 rounded-full flex items-center justify-center w-8 cursor-pointer">
+          <i class="fa-regular fa-trash-can" style="color: gray"></i>
+        </div>
+    `;
+
+    allCards.appendChild(div);
+
+    parentNode.remove();
+    calculateCount();
   }
 });
 
@@ -139,7 +189,7 @@ function renderCards() {
   for (let interview of interviewList) {
     const div = document.createElement("div");
     div.className =
-      "flex justify-between p-15 bg-white rounded-lg shadow-md mb-8";
+      "flex mt-5 justify-between p-15 bg-white rounded-lg shadow-md mb-8";
     div.innerHTML = `
       
         <div>
@@ -173,7 +223,7 @@ function renderRejectedCards() {
   for (let rejected of rejectedList) {
     const div = document.createElement("div");
     div.className =
-      "flex justify-between p-15 bg-white rounded-lg shadow-md mb-8";
+      "flex mt-5 justify-between p-15 bg-white rounded-lg shadow-md mb-8";
     div.innerHTML = `
       
         <div>
