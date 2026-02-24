@@ -5,15 +5,12 @@ let currentStatus = "all";
 
 //Got all the count elements
 let total = document.getElementById("total");
-
 let interviewCount = document.getElementById("interviewCount");
 let rejectedCount = document.getElementById("rejectedCount");
 let notAppliedCount = document.getElementById("notAppliedCount");
 let filteredSection = document.getElementById("filtered-section");
 let emptyState = document.getElementById("empty-state");
 let availableJobs = document.getElementById("job-count");
-let trashBtn = document.getElementById("trash-btn");
-console.log(trashBtn);
 
 //Got all the buttons which will be used to filter the cards
 const allBtn = document.getElementById("all-btn");
@@ -22,8 +19,6 @@ const rejectedBtn = document.getElementById("rejected-btn");
 
 //Got all the card length
 const allCards = document.getElementById("allcards");
-
-//Got the main container to append the cards
 const mainContainer = document.querySelector("main");
 
 //Made for set the length of the cards
@@ -65,10 +60,80 @@ function toggleStyle(id) {
 }
 
 mainContainer.addEventListener("click", function (event) {
+  // TRASH BUTTON HANDLER - ADD THIS SECTION FIRST
+
+  const trashContainer = event.target.closest(".delete-btn");
+
+  if (trashContainer) {
+    // Find the card container
+    const cardElement = event.target.closest(".flex.mt-5");
+    if (!cardElement) return;
+
+    // Get job details for removal from arrays
+    const jobInfoDiv = cardElement.querySelector("div:first-child");
+    const companyName = jobInfoDiv.querySelector(".company-name").innerText;
+    const jobTitle = jobInfoDiv.querySelector(".job-title").innerText;
+
+    // Remove from interviewList
+    interviewList = interviewList.filter(
+      (card) =>
+        !(card.companyName === companyName && card.jobTitle === jobTitle),
+    );
+
+    // Remove from rejectedList
+    rejectedList = rejectedList.filter(
+      (card) =>
+        !(card.companyName === companyName && card.jobTitle === jobTitle),
+    );
+
+    // REMOVE FROM ALL CARDS SECTION - ADD THIS PART
+
+    const allCardsList = allCards.querySelectorAll(".flex.mt-5");
+    for (let card of allCardsList) {
+      const cardCompanyName = card.querySelector(".company-name").innerText;
+      const cardJobTitle = card.querySelector(".job-title").innerText;
+
+      if (cardCompanyName === companyName && cardJobTitle === jobTitle) {
+        card.remove();
+        break;
+      }
+    }
+
+    // Add to deletedArray for tracking
+    const jobData = {
+      companyName,
+      jobTitle,
+      deletedAt: new Date(),
+    };
+    deletedArray.push(jobData);
+
+    // Remove the card from DOM
+    cardElement.remove();
+
+    // Update counts
+    calculateCount();
+
+    // Handle empty states
+    if (currentStatus === "interview-btn" && interviewList.length === 0) {
+      filteredSection.innerHTML = "";
+      filteredSection.appendChild(emptyState);
+      emptyState.classList.remove("hidden");
+    } else if (currentStatus === "rejected-btn" && rejectedList.length === 0) {
+      filteredSection.innerHTML = "";
+      filteredSection.appendChild(emptyState);
+      emptyState.classList.remove("hidden");
+    }
+
+    return;
+  }
+
+  // END OF TRASH BUTTON HANDLER
+
+  // INTERVIEW BUTTON HANDLER
+
   if (event.target.classList.contains("interview-btn")) {
     const parentNode = event.target.parentNode;
     const parentNodes = event.target.closest(".flex");
-    //backed all the jobs
 
     const companyName = parentNode.querySelector(".company-name").innerText;
     const jobTitle = parentNode.querySelector(".job-title").innerText;
@@ -85,6 +150,7 @@ mainContainer.addEventListener("click", function (event) {
       jobDescription,
       status: "Interview",
     };
+
     const existingCard = interviewList.find(
       (card) => card.companyName == companyName,
     );
@@ -104,7 +170,10 @@ mainContainer.addEventListener("click", function (event) {
     if (currentStatus == "rejected-btn") {
       renderRejectedCards();
     }
-  } else if (event.target.classList.contains("rejected-btn")) {
+  }
+
+  // REJECTED BUTTON HANDLER
+  else if (event.target.classList.contains("rejected-btn")) {
     const parentNode = event.target.parentNode;
     const parentNodes = event.target.closest(".flex");
     const companyName = parentNode.querySelector(".company-name").innerText;
@@ -114,6 +183,7 @@ mainContainer.addEventListener("click", function (event) {
       parentNode.querySelector(".job-description").innerText;
     const status = parentNode.querySelector(".status-btn").innerText;
     parentNode.querySelector(".status-btn").innerText = "Rejected";
+
     const jobData = {
       companyName,
       jobTitle,
@@ -121,12 +191,14 @@ mainContainer.addEventListener("click", function (event) {
       jobDescription,
       status: "Rejected",
     };
+
     const existingCard = rejectedList.find(
       (card) => card.companyName === companyName && card.jobTitle === jobTitle,
     );
     if (!existingCard) {
       rejectedList.push(jobData);
     }
+
     interviewList = interviewList.filter(
       (card) =>
         !(
@@ -134,39 +206,17 @@ mainContainer.addEventListener("click", function (event) {
           card.jobTitle === jobData.jobTitle
         ),
     );
+
     if (currentStatus == "interview-btn") {
       renderCards();
     }
     parentNodes.remove();
     calculateCount();
   }
-
-  trashBtn.addEventListener("click", function (event) {
-    const parentNode = event.target.parentNode;
-    const parentNodes = event.target.closest(".flex");
-    const companyName = parentNode.querySelector(".company-name").innerText;
-    const jobTitle = parentNode.querySelector(".job-title").innerText;
-    const jobLocation = parentNode.querySelector(".job-location").innerText;
-    const jobDescription =
-      parentNode.querySelector(".job-description").innerText;
-    const status = parentNode.querySelector(".status-btn").innerText;
-    const jobData = {
-      companyName,
-      jobTitle,
-      jobLocation,
-      jobDescription,
-      status,
-    };
-    deletedArray.push(jobData);
-    interviewList = interviewList.filter((card) => card !== jobData);
-    rejectedList = rejectedList.filter((card) => card !== jobData);
-    parentNodes.remove();
-    calculateCount();
-  });
 });
 
 function renderCards() {
-  filteredSection.innerHTML = " ";
+  filteredSection.innerHTML = "";
   if (interviewList.length === 0) {
     filteredSection.appendChild(emptyState);
     emptyState.classList.remove("hidden");
@@ -179,7 +229,6 @@ function renderCards() {
     div.className =
       "flex mt-5 justify-between p-15 bg-white rounded-lg shadow-md mb-8";
     div.innerHTML = `
-      
         <div>
           <h1 class="company-name text-2xl text-[#002C5C]">${interview.companyName}</h1>
           <p class="job-title text-[#64748B] mb-5 text-lg">${interview.jobTitle}</p>
@@ -199,15 +248,15 @@ function renderCards() {
               Rejected
             </button>
         </div>
-        <div class="border h-8 rounded-full flex items-center justify-center w-8 cursor-pointer">
+        <div class="border h-8 rounded-full flex items-center justify-center w-8 cursor-pointer delete-btn">
           <i class="fa-regular fa-trash-can" style="color: gray"></i>
-      </div>`;
+        </div>`;
     filteredSection.appendChild(div);
   }
 }
 
 function renderRejectedCards() {
-  filteredSection.innerHTML = " ";
+  filteredSection.innerHTML = "";
 
   if (rejectedList.length === 0) {
     filteredSection.appendChild(emptyState);
@@ -221,7 +270,6 @@ function renderRejectedCards() {
     div.className =
       "flex mt-5 justify-between p-15 bg-white rounded-lg shadow-md mb-8";
     div.innerHTML = `
-      
         <div>
           <h1 class="company-name text-2xl text-[#002C5C]">${rejected.companyName}</h1>
           <p class="job-title text-[#64748B] mb-5 text-lg">${rejected.jobTitle}</p>
@@ -241,9 +289,9 @@ function renderRejectedCards() {
               Rejected
             </button>
         </div>
-        <div class="border h-8 rounded-full flex items-center justify-center w-8 cursor-pointer">
+        <div class="border h-8 rounded-full flex items-center justify-center w-8 cursor-pointer delete-btn">
           <i class="fa-regular fa-trash-can" style="color: gray"></i>
-      </div>`;
+        </div>`;
     filteredSection.appendChild(div);
   }
 }
